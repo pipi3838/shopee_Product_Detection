@@ -112,3 +112,4 @@ venv.bak/
 # Experimental configs and results
 !configs/train/example_config.yaml
 !configs/test/example_config.yaml
+models/
