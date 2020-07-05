@@ -33,8 +33,9 @@ main:
 ```
 >change saved_dir path
 
-<br></br>
 ## Run Script file
-./run.sh <datafile path>
-> the whole process will take approximately two days on a single 2080Ti GPU.
+***1. Train model***  : ./train.sh <datafile path>
+> (the whole process will take approximately two days on a single 2080Ti GPU.)
 
+***2. Predict***  : ./test.sh
+>specify the model in the test config file
