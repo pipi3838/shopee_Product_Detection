@@ -5,7 +5,7 @@ import random
 import torch
 import numpy as np
 from torch.optim.lr_scheduler import (
-    CyclicLR, OneCycleLR, CosineAnnealingWarmRestarts, ReduceLROnPlateau
+    CyclicLR, CosineAnnealingWarmRestarts, ReduceLROnPlateau
 )
 from tqdm import tqdm
 
@@ -77,7 +77,7 @@ class BaseTrainer:
 
             # Adjust the learning rate.
             if (self.lr_scheduler is not None
-                    and not isinstance(self.lr_scheduler, (CyclicLR, OneCycleLR, CosineAnnealingWarmRestarts))):
+                    and not isinstance(self.lr_scheduler, (CyclicLR, CosineAnnealingWarmRestarts))):
                 self.lr_scheduler.step()
 
             # Record the log information.
@@ -160,7 +160,7 @@ class BaseTrainer:
                 if (i + 1) % dataloader.grad_accumulation_steps() == 0 or (i + 1) == len(dataloader):
                     self.optimizer.step()
                     self.optimizer.zero_grad()
-                    if isinstance(self.lr_scheduler, (CyclicLR, OneCycleLR)):
+                    if isinstance(self.lr_scheduler, CyclicLR):
                         self.lr_scheduler.step()
                     elif isinstance(self.lr_scheduler, CosineAnnealingWarmRestarts):
                         self.lr_scheduler.step((self.epoch - 1) + i / len(dataloader))

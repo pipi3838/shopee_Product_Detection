@@ -3,8 +3,16 @@ import torch.nn as nn
 
 __all__ = [
     'Dice',
+    'Accuracy',
 ]
 
+class Accuracy(nn.Module):
+    def __init__(self):
+        super().__init__()
+    
+    def forward(self, output, target):
+        pred = output.argmax(dim=1, keepdim=False)
+        return (pred == target).float().mean()
 
 class Dice(nn.Module):
     """The Dice score.

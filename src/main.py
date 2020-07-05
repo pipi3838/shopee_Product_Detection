@@ -185,21 +185,21 @@ def main(args):
         logging.info('Create the network architecture.')
         net = _get_instance(src.model.nets, config.net).to(device)
 
-        logging.info('Create the loss functions and corresponding weights.')
-        loss_names, loss_fns, loss_weights = [], [], []
-        defaulted_loss_fns = tuple(loss_fn for loss_fn in dir(torch.nn) if 'Loss' in loss_fn)
-        for config_loss in config.losses:
-            loss_name = config_loss.get('alias', config_loss.name)
-            if config_loss.name in defaulted_loss_fns:
-                loss_fn = _get_instance(torch.nn, config_loss).to(device)
-            else:
-                loss_fn = _get_instance(src.model.losses, config_loss).to(device)
-            loss_weight = config_loss.get('weight', 1 / len(config.losses))
-            loss_names.append(loss_name)
-            loss_fns.append(loss_fn)
-            loss_weights.append(loss_weight)
-        LossFns, LossWeights = namedtuple('LossFns', loss_names), namedtuple('LossWeights', loss_names)
-        loss_fns, loss_weights = LossFns(*loss_fns), LossWeights(*loss_weights)
+        # logging.info('Create the loss functions and corresponding weights.')
+        # loss_names, loss_fns, loss_weights = [], [], []
+        # defaulted_loss_fns = tuple(loss_fn for loss_fn in dir(torch.nn) if 'Loss' in loss_fn)
+        # for config_loss in config.losses:
+        #     loss_name = config_loss.get('alias', config_loss.name)
+        #     if config_loss.name in defaulted_loss_fns:
+        #         loss_fn = _get_instance(torch.nn, config_loss).to(device)
+        #     else:
+        #         loss_fn = _get_instance(src.model.losses, config_loss).to(device)
+        #     loss_weight = config_loss.get('weight', 1 / len(config.losses))
+        #     loss_names.append(loss_name)
+        #     loss_fns.append(loss_fn)
+        #     loss_weights.append(loss_weight)
+        # LossFns, LossWeights = namedtuple('LossFns', loss_names), namedtuple('LossWeights', loss_names)
+        # loss_fns, loss_weights = LossFns(*loss_fns), LossWeights(*loss_weights)
 
         if 'metrics' in config:
             logging.info('Create the metric functions.')
@@ -225,8 +225,8 @@ def main(args):
             'device': device,
             'test_dataloader': test_dataloader,
             'net': net,
-            'loss_fns': loss_fns,
-            'loss_weights': loss_weights,
+            # 'loss_fns': loss_fns,
+            # 'loss_weights': loss_weights,
             'metric_fns': metric_fns
         }
         config.predictor.kwargs.update(kwargs)

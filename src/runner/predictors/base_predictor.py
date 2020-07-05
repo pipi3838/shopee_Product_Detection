@@ -1,6 +1,7 @@
 import logging
 import torch
 from tqdm import tqdm
+import numpy as np
 
 from src.runner.utils import EpochLog
 
@@ -20,13 +21,13 @@ class BasePredictor:
     """
 
     def __init__(self, saved_dir, device, test_dataloader,
-                 net, loss_fns, loss_weights, metric_fns):
+                 net, metric_fns):
         self.saved_dir = saved_dir
         self.device = device
         self.test_dataloader = test_dataloader
         self.net = net.to(device)
-        self.loss_fns = loss_fns
-        self.loss_weights = loss_weights
+        # self.loss_fns = loss_fns
+        # self.loss_weights = loss_weights
         self.metric_fns = metric_fns
 
     def predict(self):
@@ -37,22 +38,37 @@ class BasePredictor:
         pbar = tqdm(dataloader, desc='test', ascii=True)
 
         epoch_log = EpochLog()
+        ans = open('./effnet_b3fc_ans.csv', 'w')
+        ans.write('filename,category\n')
+
+        logits_store = []
         for i, batch in enumerate(pbar):
             with torch.no_grad():
-                test_dict = self._test_step(batch)
-                loss = test_dict['loss']
-                losses = test_dict.get('losses')
-                metrics = test_dict.get('metrics')
+                input_img = batch['img'].to(self.device)
+                files = batch['filename']
+                output = self.net(input_img)
+                pred = output.argmax(dim=1, keepdim=False)
+                for f, p, logit in zip(files, pred, output):
+                    ans.write('{},{}\n'.format(f, str(p.item()).zfill(2)))
+                    logits_store.append(logit)
+                # test_dict = self._test_step(batch)
+                # loss = test_dict['loss']
+                # losses = test_dict.get('losses')
+                # metrics = test_dict.get('metrics')
 
             if (i + 1) == len(dataloader) and not dataloader.drop_last:
                 batch_size = len(dataloader.dataset) % dataloader.batch_size
             else:
                 batch_size = dataloader.batch_size
-            epoch_log.update(batch_size, loss, losses, metrics)
+        
+        logits_store = np.array(logits_store)
+        print(logits_store.shape)
+        np.save('effnet_b3fc_aug.npy', logits_store)
+        #     epoch_log.update(batch_size, loss, losses, metrics)
 
-            pbar.set_postfix(**epoch_log.on_step_end_log)
-        test_log = epoch_log.on_epoch_end_log
-        LOGGER.info(f'Test log: {test_log}.')
+        #     pbar.set_postfix(**epoch_log.on_step_end_log)
+        # test_log = epoch_log.on_epoch_end_log
+        # LOGGER.info(f'Test log: {test_log}.')
 
     def _test_step(self, batch):
         """The user-defined testing logic.
@@ -65,7 +81,8 @@ class BasePredictor:
                 test_dict['losses'] (dict, optional)
                 test_dict['metrics'] (dict, optional)
         """
-        raise NotImplementedError
+        # raise NotImplementedError
+        pass
 
     def load(self, path):
         """Load the model checkpoint.

@@ -1,4 +1,5 @@
 from torch.utils.tensorboard import SummaryWriter
+from torchvision.utils import make_grid
 
 
 class BaseLogger:
@@ -63,4 +64,19 @@ class BaseLogger:
             valid_batch (dict or sequence): The validation batch.
             valid_outputs (torch.Tensor or sequence of torch.Tensor): The validation outputs.
         """
-        raise NotImplementedError
+        # num_classes = train_outputs.size(1)
+        # train_img = make_grid(train_batch['img'], nrow=1, normalize=True, scale_each=True, pad_value=1)
+        # train_label = make_grid(train_batch['label'].float(), nrow=1, normalize=True,
+        #                         scale_each=True, range=(0, num_classes - 1), pad_value=1)
+        # train_pred = make_grid(train_output.argmax(dim=1, keepdim=True).float(), nrow=1, normalize=True,
+        #                        scale_each=True, range=(0, num_classes - 1), pad_value=1)
+        # valid_img = make_grid(valid_batch['img'], nrow=1, normalize=True, scale_each=True, pad_value=1)
+        # valid_label = make_grid(valid_batch['label'].float(), nrow=1, normalize=True,
+        #                         scale_each=True, range=(0, num_classes - 1), pad_value=1)
+        # valid_pred = make_grid(valid_output.argmax(dim=1, keepdim=True).float(), nrow=1, normalize=True,
+        #                        scale_each=True, range=(0, num_classes - 1), pad_value=1)
+        # train_grid = torch.cat((train_img, train_label, train_pred), dim=-1)
+        # valid_grid = torch.cat((valid_img, valid_label, valid_pred), dim=-1)
+        # self.writer.add_image('train', train_grid)
+        # self.writer.add_image('valid', valid_grid)
+        pass
