@@ -35,6 +35,6 @@ main:
 
 <br></br>
 ## Run Script file
-> ./run.sh <datafile path>
-
+./run.sh <datafile path>
+> the whole process will take approximately two days on a single 2080Ti GPU.
 
