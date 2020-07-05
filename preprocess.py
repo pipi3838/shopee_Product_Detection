@@ -2,8 +2,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import os
 import cv2
+import sys
 
-data_path = '/nfs/nas-5.1/wbcheng/shopee_task2/'
+
+#data_path = '/nfs/nas-5.1/wbcheng/shopee_task2/'
+data_path = sys.argv[1]
 
 data_df = pd.read_csv(os.path.join(data_path, 'train.csv'))
 data_df.columns = ['Filename', 'Category']
