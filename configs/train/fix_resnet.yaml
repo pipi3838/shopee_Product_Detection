@@ -1,0 +1,70 @@
+main:
+    random_seed: 8745
+    saved_dir: '/nfs/nas-5.1/wbcheng/shopee_task2/modules/ResNet_modified_aug'
+    # loaded_path: '/nfs/nas-5.1/wbcheng/shopee_task2/modules/EfficientNet_b7/checkpoints/model_best.pth' # The loaded_path is not necessary.
+
+dataset:
+    name: 'ImageDataset'
+    kwargs:
+        data_dir: '/nfs/nas-5.1/wbcheng/shopee_task2'
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+
+dataloader:
+    name: 'Dataloader'
+    kwargs:
+        train:
+          batch_size: 16
+        valid:
+          batch_size: 16
+        shuffle: true
+        num_workers: 8
+
+net:
+    name: 'ResNet'
+    kwargs:
+        in_channels: 3
+        out_channels: 42
+losses:
+    - name: 'CrossEntropyLossWrapper'
+      alias: 'cross_entropy_loss'
+
+
+metrics:
+    - name: 'Accuracy'
+#       kwargs:
+#           kwarg1: value1
+#           kwarg2: value2
+
+optimizer:
+    name: 'Adam'
+    kwargs:
+        lr: 1e-5
+        weight_decay: 0
+        amsgrad: false
+
+# The lr_scheduler section is not necessary.
+# lr_scheduler:
+#     name: 'StepLR'
+#     kwargs:
+#         step_size: 30
+#         gamma: 0.1
+
+logger:
+    name: 'BaseLogger'
+    kwargs:
+        dummy_input: [N, C, H, W]
+
+monitor:
+    name: 'Monitor'
+    kwargs:
+        mode: 'min'
+        target: 'loss'
+        saved_freq: 5
+        early_stop: 0
+
+trainer:
+    name: 'Trainer'
+    kwargs:
+        device: 'cuda:0'
+        num_epochs: 20

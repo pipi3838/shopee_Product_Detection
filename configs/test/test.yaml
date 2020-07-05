@@ -1,0 +1,28 @@
+main:
+    saved_dir: '/nfs/nas-5.1/wbcheng/shopee_task2/modules/Effnet_b3fc_modified/results'
+    loaded_path: '/nfs/nas-5.1/wbcheng/shopee_task2/modules/Effnet_b3fc_modified/checkpoints/model_best.pth' # The loaded_path is necessary.
+
+dataset:
+    name: 'ImageDataset'
+    kwargs:
+        data_dir: '/nfs/nas-5.1/wbcheng/shopee_task2'
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+
+dataloader:
+    name: 'Dataloader'
+    kwargs:
+      batch_size: 8
+      shuffle: false
+      num_workers: 8
+
+net:
+    name: 'EffNet_b3_fc'
+    kwargs:
+        in_channels: 3
+        out_channels: 42
+
+predictor:
+    name: 'BasePredictor'
+    kwargs:
+        device: 'cuda:0'
